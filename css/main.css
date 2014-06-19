@@ -1,0 +1,419 @@
+/*! HTML5 Boilerplate v4.3.0 | MIT License | http://h5bp.com/ */
+
+html,
+button,
+input,
+select,
+textarea {
+    color: #222;
+}
+
+html {
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+audio,
+canvas,
+img,
+video {
+    vertical-align: middle;
+}
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.browsehappy {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+/* ==========================================================================
+GLOBAL STYLES
+========================================================================== */
+
+body {
+    margin: 0;
+}
+
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('../fonts/fontawesome-webfont.eot?v=4.0.3');
+    src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.clearFloat:after,
+.clearFloat:before {
+    content: " ";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+/* ==========================================================================
+   320px
+   ========================================================================== */
+
+#header {
+    text-align: center;
+    background-color: #111;
+}
+
+#header > h1 {
+    margin: 0;
+    padding: 0.3em;
+    color: #fff;
+    font-size: 1.3em;
+    font-family: 'Pacifico', cursive;
+}
+
+#header > h1 > span {
+    color: #c41e1e;
+}
+
+#header #logoIcon:before {
+    font-family: 'FontAwesome';
+    content: "\f135";
+}
+
+
+main {
+    width: 100%;
+}
+
+main #maps {
+    width: 100%;
+    height: 22em;
+}
+
+#doubleButton {
+    width: 80%;
+    margin: 1em auto;
+    text-align: center;
+}
+
+#doubleButton .btn {
+    color: white;
+    line-height: 2em;
+    font-size: 1.5em;
+    font-family: 'Pacifico', cursive;
+    display: block;
+    text-decoration: none;  
+    width: 50%;
+}
+
+#doubleButton #retrackBtn {
+    background-color: #c41e1e;
+    float: left;
+    -webkit-border-radius: 0 5px 5px 0;
+    -moz-border-radius: 0 5px 5px 0;
+    border-radius: 0 5px 5px 0;
+}
+
+#doubleButton #configureBtn {
+    background-color: #000000;
+    float: left;
+    -webkit-border-radius: 5px 0 0 5px;
+    -moz-border-radius: 5px 0 0 5px;
+    border-radius: 5px 0 0 5px;
+}
+
+#placesContainer > .result {
+    width: 90%;
+    margin: 0 auto 1em;
+    background-color: #eee;
+    padding: 0.5em;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+} 
+
+#placesContainer .resultIndex {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0.3em;
+    line-height: 1;
+    font-size: 1.2em;
+    color: #c41e1e;
+    font-family: 'Pacifico', cursive;
+    font-weight: bold;
+}
+
+#placesContainer .resultName {
+    font-size: 1.2em;
+    color: #c41e1e;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    padding: 0 1.2em;
+}
+
+#placesContainer .resultIcon {
+    position: absolute;
+    top: 0.2em;
+    right: 0;
+    margin: 0.3em;
+    width: 1.5em;
+}
+
+#placesContainer .resultAddress {
+    font-size: 0.7em;
+    margin-top: 0;
+}
+
+#placesContainer .resultCategories,
+#placesContainer .resultAddress {
+    font-size: 0.7em;
+    margin-top: 0;
+    margin-bottom: 0.5em;
+}
+
+#placesContainer .resultCategories {
+    margin-bottom: 0.2em;
+}
+
+#placesContainer .resultRatings,
+#placesContainer .resultPrice {
+    margin-bottom: 0.4em;
+    font-size: 0.7em;
+    margin-top: 0.5em;
+}
+
+#placesContainer .resultRatings p,
+#placesContainer .resultPrice p {
+    margin-top: 0em;
+    margin-bottom: 0.2em;
+    display: inline-block;
+}
+
+#placesContainer .resultRatings .resultStars,
+#placesContainer .resultPrice .resultDollar {
+    font-family: 'FontAwesome';
+    color: #e6e600;
+    display: inline-block;
+    background-color: #ea9090;
+    padding: 0 3px;
+    margin-right: 3px;
+    webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+
+}
+
+#placesContainer .resultCategories span {
+    display: inline-block;
+    background-color: #ea9090;
+    padding: 0 3px;
+    margin-right: 3px;
+    webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    margin-bottom: 3px;
+}
+
+@media only screen and (min-width: 768px) {
+
+    main #maps {
+        width: 100%;
+        height: 32em;
+    }
+
+    #placesContainer {
+        text-align: center;
+    }
+
+    #placesContainer > .result {
+        display: inline-block;
+        width: 47%;
+        max-width: 25em;
+        margin: 0.5em 0.5em;
+        vertical-align: middle;
+        text-align: left;
+    }
+}
+
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+
+}
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+.ir {
+    background-color: transparent;
+    border: 0;
+    overflow: hidden;
+    *text-indent: -9999px;
+}
+
+.ir:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 150%;
+}
+
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+/* ==========================================================================
+   Print styles
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
