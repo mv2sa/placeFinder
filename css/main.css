@@ -219,7 +219,12 @@ main #maps {
 }
 
 #placesContainer .resultCategories {
-    margin-bottom: 0.2em;
+    margin-bottom: 1.6em;
+}
+
+#placesContainer .resultDisclaimer {
+    position: absolute;
+    bottom: 0.3em;
 }
 
 #placesContainer .resultRatings,
