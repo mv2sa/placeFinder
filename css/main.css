@@ -156,6 +156,11 @@ main #maps {
 }
 
 #placesContainer {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.flexbox #placesContainer {
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -163,8 +168,10 @@ main #maps {
     display: flex;
     -webkit-flex-flow: row wrap;
     flex-flow: row wrap;
-    width: 90%;
-    margin: 0 auto;
+}
+
+.no-flexbox #placesContainer {
+    text-align: center;
 }
 
 #placesContainer > .result {
@@ -178,6 +185,10 @@ main #maps {
     position: relative;
     cursor: pointer;
 } 
+
+.no-flexbox #placesContainer > .result {
+    text-align: left;
+}
 
 #placesContainer .resultIndex {
     position: absolute;
