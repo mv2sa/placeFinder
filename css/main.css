@@ -155,6 +155,16 @@ main #maps {
     border-radius: 5px 0 0 5px;
 }
 
+#placesContainer {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+
 #placesContainer > .result {
     width: 90%;
     margin: 0 auto 1em;
@@ -175,7 +185,6 @@ main #maps {
     line-height: 1;
     font-size: 1.2em;
     color: #c41e1e;
-    font-family: 'Pacifico', cursive;
     font-weight: bold;
 }
 
@@ -259,17 +268,12 @@ main #maps {
         height: 32em;
     }
 
-    #placesContainer {
-        text-align: center;
-    }
-
     #placesContainer > .result {
         display: inline-block;
         width: 47%;
         max-width: 25em;
         margin: 0.5em 0.5em;
         vertical-align: middle;
-        text-align: left;
     }
 }
 
