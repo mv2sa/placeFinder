@@ -163,6 +163,8 @@ main #maps {
     display: flex;
     -webkit-flex-flow: row wrap;
     flex-flow: row wrap;
+    width: 90%;
+    margin: 0 auto;
 }
 
 #placesContainer > .result {
@@ -275,10 +277,16 @@ main #maps {
 
     #placesContainer > .result {
         display: inline-block;
-        width: 47%;
-        max-width: 25em;
-        margin: 0.5em 0.5em;
+        width: 48%;
+        margin: 0.5em 1%;
         vertical-align: middle;
+    }
+}
+
+@media only screen and (min-width: 1350px) {
+
+    #placesContainer > .result {
+        width: 31.33%;
     }
 }
 
