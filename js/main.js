@@ -1,9 +1,8 @@
 var app = angular.module('dragon', ['filters']);
 
-app.controller('dragonRoar', function($scope, dragonBreath) {
+app.controller('dragonRoar', function($scope, dragonBreath, $timeout) {
 	$scope.places = [];
 	$scope.markers = [];
-	$scope.tooManyCalls = 0;
 
 	$scope.retrack = function () {
 		if (Modernizr.geolocation) {
@@ -12,18 +11,11 @@ app.controller('dragonRoar', function($scope, dragonBreath) {
 				$scope.maps.setCenter($scope.coords);
 				$scope.maps.setZoom(13);
 				removeAllMarkers();
-			    var marker = new google.maps.Marker({
-				    position: $scope.maps.getCenter(),
-				    map: $scope.maps,
-				    title: 'You'
-				});
-			    $scope.markers.push(marker);
+				addYouMarker();
 				dragonBreath.callMaps($scope.maps, $scope.coords, 2000, []);
-				setTimeout(function(){
-					$scope.tooManyCalls++;
-					console.log($scope.tooManyCalls);
+				$timeout(function(){
 					asyncTest();
-				}, 2000);
+				}, 1000);
 			});
 		}	
 	};
@@ -42,8 +34,14 @@ app.controller('dragonRoar', function($scope, dragonBreath) {
 
 	var asyncTest = function () {
 		$scope.places = dragonBreath.getPlaces();
-		if ($scope.places.length === 0) {
-			asyncTest();
+		if ($scope.places.error) {
+			removeAllMarkers();
+			addYouMarker();
+			$scope.$apply();
+		} else if ($scope.places.length === 0) {
+			$timeout(function(){
+				asyncTest();
+			}, 1000);
 		} else {
 			$scope.$apply();
 			addMarkers();
@@ -58,18 +56,11 @@ app.controller('dragonRoar', function($scope, dragonBreath) {
 			    	center: $scope.coords,
 			    	zoom: 13
 			    }); 
-			    var marker = new google.maps.Marker({
-				    position: $scope.maps.getCenter(),
-				    map: $scope.maps,
-				    title: 'You'
-				});
-				$scope.markers.push(marker);
+				addYouMarker();
 				dragonBreath.callMaps($scope.maps, $scope.coords, 2000, []);
-				setTimeout(function(){
-					$scope.tooManyCalls++;
-					console.log($scope.tooManyCalls);
+				$timeout(function(){
 					asyncTest();
-				}, 2000);
+				}, 1000);
 			});
 		}	
 	};
@@ -100,6 +91,15 @@ app.controller('dragonRoar', function($scope, dragonBreath) {
 		$scope.markers = [];
 	};
 
+	var addYouMarker = function () {
+		var marker = new google.maps.Marker({
+		    position: $scope.maps.getCenter(),
+		    map: $scope.maps,
+		    title: 'You'
+		});
+		$scope.markers.push(marker);
+	};
+
 	track();
 
 });
@@ -114,6 +114,10 @@ app.factory('dragonBreath', function() {
 		service.nearbySearch({location : coords, radius : area, types : interests}, function(results, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
 				places = results;
+			} else if (status == google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+				places = {error : 'Nothing Found'};
+			} else {
+				places = {error : 'Service Unavailable'};
 			}
 			return places;			
 		});

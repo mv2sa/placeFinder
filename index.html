@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.2.mv2sa.custom.min.js"></script>
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0gaXs9dAemZB7wXh-QWblUhK1tleHb0g&sensor=false&libraries=places"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4OFKbHnw9Ks7vW14ULE4xIQuFk4B6Fs4&sensor=false&libraries=places"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.17/angular.min.js"></script>
         <script src="js/main.js"></script>
     </head>
@@ -31,7 +31,10 @@
                 <a href="" ng-click="retrack()" class="btn" id="retrackBtn">Retrack!</a> 
             </div>
             <div id="placesContainer">
-                <div ng-repeat="place in places" class="result" ng-click="centerOnMap($index+1)">
+                <div id="error" ng-if="places.error">
+                    <p class="errorDesc">{{places.error}}</p>
+                </div>
+                <div ng-if="!places.error" ng-repeat="place in places" class="result" ng-click="centerOnMap($index+1)">
                     <p class="resultIndex">{{ $index + 1 | toAZ }}</p>
                     <p class="resultName">{{ place.name }}</p>
                     <img class="resultIcon" src="{{ place.icon }}" />
