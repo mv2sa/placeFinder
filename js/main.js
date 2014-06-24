@@ -12,6 +12,7 @@ app.controller('dragonRoar', function($scope, dragonBreath, $timeout) {
 				$scope.maps.setZoom(13);
 				removeAllMarkers();
 				addYouMarker();
+				showLoading();
 				dragonBreath.callMaps($scope.maps, $scope.coords, 2000, []);
 				$timeout(function(){
 					asyncTest();
@@ -57,12 +58,18 @@ app.controller('dragonRoar', function($scope, dragonBreath, $timeout) {
 			    	zoom: 13
 			    }); 
 				addYouMarker();
+				showLoading();
 				dragonBreath.callMaps($scope.maps, $scope.coords, 2000, []);
 				$timeout(function(){
 					asyncTest();
 				}, 1000);
 			});
 		}	
+	};
+
+	var showLoading = function () {
+		$scope.places = { loading : true };
+		$scope.$apply();
 	};
 
 	var addMarkers = function () {

@@ -31,13 +31,16 @@
                 <a href="" ng-click="retrack()" class="btn" id="retrackBtn">Retrack!</a> 
             </div>
             <div id="placesContainer">
-                <div id="error" ng-if="places.error">
-                    <p class="errorDesc">{{places.error}}</p>
+                <div id="placesLoading" ng-if="places.loading">
+                    <p class="loading"></p>
                 </div>
-                <div ng-if="!places.error" ng-repeat="place in places" class="result" ng-click="centerOnMap($index+1)">
+                <div id="placesError" ng-if="places.error">
+                    <p class="placesErrorDesc">{{places.error}}</p>
+                </div>
+                <div ng-if="!places.error && !places.loading" ng-repeat="place in places" class="result" ng-click="centerOnMap($index+1)">
                     <p class="resultIndex">{{ $index + 1 | toAZ }}</p>
                     <p class="resultName">{{ place.name }}</p>
-                    <img class="resultIcon" src="{{ place.icon }}" />
+                    <img class="resultIcon" ng-if="place.icon" src="{{ place.icon }}" />
                     <p class="resultAddress" ng-if="place.vicinity">Address: {{ place.vicinity }}</p>
                     <div class="resultRatings" ng-if="place.rating">
                         <p>Ratings:</p>
