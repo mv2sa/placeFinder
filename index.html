@@ -2,7 +2,7 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html ng-app="dragon" class="no-js"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -12,53 +12,19 @@
         <link href='http://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="css/normalize.mv2sa.css">
         <link rel="stylesheet" href="css/main.css">
-
         <script src="js/vendor/modernizr-2.6.2.mv2sa.custom.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.js"></script>
+        <script type="text/javascript" src="https://code.angularjs.org/1.2.18/angular-route.js"></script>
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4OFKbHnw9Ks7vW14ULE4xIQuFk4B6Fs4&sensor=false&libraries=places"></script>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.17/angular.min.js"></script>
         <script src="js/main.js"></script>
     </head>
-    <body ng-app="dragon">
+    <body>
         <header id="header">
             <h1>
                 Place<span id="logoFinder">Finder</span> <span id="logoIcon"></span>
             </h1>
         </header>
-        <main id="mainWrapper" ng-controller="dragonRoar">
-            <div id="maps"></div>
-            <div id="doubleButton" class="clearFloat">
-                <a href="" ng-click="configureFilters()" class="btn" id="configureBtn">Configure!</a> 
-                <a href="" ng-click="retrack()" class="btn" id="retrackBtn">Retrack!</a> 
-            </div>
-            <div id="placesContainer">
-                <div id="placesLoading" ng-if="places.loading">
-                    <p class="loading"></p>
-                </div>
-                <div id="placesError" ng-if="places.error">
-                    <p class="placesErrorDesc">{{places.error}}</p>
-                </div>
-                <div ng-if="!places.error && !places.loading" ng-repeat="place in places" class="result" ng-click="centerOnMap($index+1)">
-                    <p class="resultIndex">{{ $index + 1 | toAZ }}</p>
-                    <p class="resultName">{{ place.name }}</p>
-                    <img class="resultIcon" ng-if="place.icon" src="{{ place.icon }}" />
-                    <p class="resultAddress" ng-if="place.vicinity">Address: {{ place.vicinity }}</p>
-                    <div class="resultRatings" ng-if="place.rating">
-                        <p>Ratings:</p>
-                        <span class="resultStars" ng-bind-html="place.rating | ratingToStar | toHTML"></span>
-                    </div>
-                    <div class="resultPrice" ng-if="place.price_level">
-                        <p>Price:</p>
-                        <span class="resultDollar" ng-bind-html="place.price_level | priceRating | toHTML"></span>
-                    </div>
-                    <p class="resultCategories">
-                        Tags: 
-                        <span ng-repeat="locationType in place.types" class="resultCategory">
-                            {{ locationType | underscoreToSpace }}
-                        </span>
-                    </p>
-                    <img src="img/powered-by-google-on-white.png" class="resultDisclaimer" alt="Powered by Google" />
-                </div>
-            </div>
+        <main id="mainWrapper" ng-view>
         </main>
     </body>
 </html>

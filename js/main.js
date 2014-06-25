@@ -1,8 +1,17 @@
-var app = angular.module('dragon', ['filters']);
+var app = angular.module('dragon', ['ngRoute', 'filters']);
+
+app.config(['$routeProvider', function($routeProvider) {
+	$routeProvider.when('/', {
+		templateUrl: 'views/mapSearch.html', 
+    	controller: 'dragonRoar'
+	}).otherwise({redirectTo:'/'});
+}]);
 
 app.controller('dragonRoar', function($scope, dragonBreath, $timeout) {
 	$scope.places = [];
 	$scope.markers = [];
+	$scope.placeDetail = { display : false };
+	$scope.searchConfig = { display : false };
 
 	$scope.retrack = function () {
 		if (Modernizr.geolocation) {
@@ -33,6 +42,14 @@ app.controller('dragonRoar', function($scope, dragonBreath, $timeout) {
 		}
 	};
 
+	$scope.showConfigs = function () {
+		if($scope.searchConfig.display === false) {
+			$scope.searchConfig.display = true;		
+		} else {
+			$scope.searchConfig.display = false;
+		}
+	};
+
 	var asyncTest = function () {
 		$scope.places = dragonBreath.getPlaces();
 		if ($scope.places.error) {
@@ -56,7 +73,16 @@ app.controller('dragonRoar', function($scope, dragonBreath, $timeout) {
 				$scope.maps = new google.maps.Map(document.getElementById('maps'), {
 			    	center: $scope.coords,
 			    	zoom: 13
-			    }); 
+			    });
+			    $scope.$watch('searchConfig.display', function() {
+					resizeMap();
+				});
+			    $scope.$watch('placeDetail.display', function() {
+					resizeMap();
+				});
+			    google.maps.event.addDomListener(window, "resize", function() {
+					resizeMap();
+				});
 				addYouMarker();
 				showLoading();
 				dragonBreath.callMaps($scope.maps, $scope.coords, 2000, []);
@@ -105,6 +131,12 @@ app.controller('dragonRoar', function($scope, dragonBreath, $timeout) {
 		    title: 'You'
 		});
 		$scope.markers.push(marker);
+	};
+
+	var resizeMap = function () {
+		var center = $scope.maps.getCenter();
+		google.maps.event.trigger($scope.maps, "resize");
+		$scope.maps.setCenter(center);
 	};
 
 	track();

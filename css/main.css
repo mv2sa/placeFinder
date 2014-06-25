@@ -136,9 +136,15 @@ main {
     width: 100%;
 }
 
-main #maps {
+#maps {
     width: 100%;
     height: 22em;
+}
+
+#placeDetail {
+    width: 100%;
+    height: 22em;
+    background-color: green;
 }
 
 #doubleButton {
@@ -340,9 +346,31 @@ main #maps {
 
 @media only screen and (min-width: 768px) {
 
-    main #maps {
+    #maps {
         width: 100%;
         height: 32em;
+    }
+
+    .doubleView #maps {
+        width: 50%;
+        float: left;
+    }
+
+    .doubleView:after,
+    .doubleView:before {
+        content: " ";
+        display: block;
+        clear: both;
+        visibility: hidden;
+        line-height: 0;
+        height: 0;
+    }
+
+    #placeDetail,
+    #searchConfig {
+        width: 50%;
+        height: 32em;
+        float: right;
     }
 
     #placesContainer > .result {
@@ -351,6 +379,7 @@ main #maps {
         margin: 0.5em 1%;
         vertical-align: middle;
     }
+
 }
 
 @media only screen and (min-width: 1350px) {
