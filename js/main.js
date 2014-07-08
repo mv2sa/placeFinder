@@ -101,7 +101,7 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, $timeou
 	var track = function () {
 		if (Modernizr.geolocation) {
 			navigator.geolocation.getCurrentPosition(function (position) {
-				$scope.coords = new google.maps.LatLng(37.784974, -122.411164);//(position.coords.latitude,position.coords.longitude);
+				$scope.coords = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
 				$scope.maps = new google.maps.Map(document.getElementById('maps'), {
 			    	center: $scope.coords,
 			    	zoom: 13
@@ -117,7 +117,7 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, $timeou
 				});
 				addYouMarker();
 				showLoading();
-				dragonBreath.callMaps($scope.maps, $scope.coords, 2000, ['food']);
+				dragonBreath.callMaps($scope.maps, $scope.coords, 2000, []);
 				$timeout(function(){
 					asyncPlacesReceiver();
 				}, 1000);

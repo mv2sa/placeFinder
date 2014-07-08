@@ -7,9 +7,15 @@
         </div>
         <div id="placeDetailLoading" ng-if="!placeDetails.loading && !placeDetails.info.error">
             <h3>{{ placeDetails.info.name }}</h3>
+            <div class="resultRatings" ng-if="placeDetails.info.rating">
+                <p>Ratings: <span class="resultStars" ng-bind-html="placeDetails.info.rating | ratingToStar | toHTML"></span></p>
+            </div>
+            <div class="resultPrice" ng-if="placeDetails.info.price_level">
+                <p>Price: <span class="resultDollar" ng-bind-html="placeDetails.info.price_level | priceRating | toHTML"></span></p>
+            </div>
             <p ng-if="placeDetails.info.formatted_address">Address: <span> {{ placeDetails.info.formatted_address }}</span></p>
             <p ng-if="placeDetails.info.formatted_phone_number">Phone Number: <span> {{ placeDetails.info.formatted_phone_number }}</p>
-            <a href="{{ placeDetails.info.website }}" target="_blank" ng-if="placeDetails.info.website">{{ placeDetails.info.website }}</a>
+            <p ng-if="placeDetails.info.website">Website: <a href="{{ placeDetails.info.website }}" target="_blank">{{ placeDetails.info.website }}</a></p>
         </div>
         <div id="placeDetailError" ng-if="placeDetails.info.error">
             <p class="placesErrorDesc">{{ placeDetails.info.error }}</p>
