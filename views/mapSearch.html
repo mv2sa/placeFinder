@@ -5,17 +5,24 @@
         <div id="placeDetailLoading" ng-if="placeDetails.loading">
             <p class="loading"></p>
         </div>
-        <div id="placeDetailLoading" ng-if="!placeDetails.loading && !placeDetails.info.error">
+        <div id="placeDetailContent" ng-if="!placeDetails.loading && !placeDetails.info.error">
             <h3>{{ placeDetails.info.name }}</h3>
             <div class="resultRatings" ng-if="placeDetails.info.rating">
-                <p>Ratings: <span class="resultStars" ng-bind-html="placeDetails.info.rating | ratingToStar | toHTML"></span></p>
+                <p>
+                    <span ng-if="placeDetails.info.user_ratings_total">{{ placeDetails.info.user_ratings_total }} </span>Ratings: <span class="resultStars" ng-bind-html="placeDetails.info.rating | ratingToStar | toHTML"></span><span class="resultDollar" ng-if="placeDetails.info.price_level" ng-bind-html="placeDetails.info.price_level | priceRating | toHTML"></span>
+                </p>
             </div>
-            <div class="resultPrice" ng-if="placeDetails.info.price_level">
-                <p>Price: <span class="resultDollar" ng-bind-html="placeDetails.info.price_level | priceRating | toHTML"></span></p>
-            </div>
+            <a href="#" ng-if="placeDetails.info.reviews" class="btn">
+                See Ratings
+            </a>
             <p ng-if="placeDetails.info.formatted_address">Address: <span> {{ placeDetails.info.formatted_address }}</span></p>
             <p ng-if="placeDetails.info.formatted_phone_number">Phone Number: <span> {{ placeDetails.info.formatted_phone_number }}</p>
-            <p ng-if="placeDetails.info.website">Website: <a href="{{ placeDetails.info.website }}" target="_blank">{{ placeDetails.info.website }}</a></p>
+            <p ng-if="placeDetails.info.website">Website: <a class="placeDetailsWeb" href="{{ placeDetails.info.website }}" target="_blank">{{ placeDetails.info.website }}</a></p>
+            <div ng-if="placeDetails.info.photos" class="placeDetailsPictures">
+                <a href="#" ng-repeat="photo in placeDetails.info.photos">
+                    <img ng-src="{{ photo.photoSmall }}" />
+                </a>
+            </div>
         </div>
         <div id="placeDetailError" ng-if="placeDetails.info.error">
             <p class="placesErrorDesc">{{ placeDetails.info.error }}</p>
@@ -41,7 +48,7 @@
     <div ng-if="!places.error && !places.loading" ng-repeat="place in places" class="result" ng-click="showDetails($index+1, place.place_id)">
         <p class="resultIndex">{{ $index + 1 | toAZ }}</p>
         <p class="resultName">{{ place.name }}</p>
-        <img class="resultIcon" ng-if="place.icon" src="{{ place.icon }}" />
+        <img class="resultIcon" ng-if="place.icon" ng-src="{{ place.icon }}" />
         <p class="resultAddress" ng-if="place.vicinity">Address: {{ place.vicinity }}</p>
         <div class="resultRatings" ng-if="place.rating">
             <p>Ratings:</p>

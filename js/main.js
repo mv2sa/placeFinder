@@ -51,26 +51,24 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, $timeou
 		}
 		centerOnMap(index);
 		dragonHeart.callToDetails($scope.maps, placeId);
-		$scope.$apply();
 		$timeout(function(){
 			asyncDetailsReceiver();
 		}, 1000);
 	};
-
+	// not proud
 	var asyncPlacesReceiver = function () {
 		$scope.places = dragonBreath.getPlaces();
 		if ($scope.places.error) {
 			removeAllMarkers();
 			addYouMarker();
-			$scope.$digest();
 		} else if ($scope.places.length === 0) {
 			$timeout(function(){
 				asyncPlacesReceiver();
 			}, 1000);
 		} else {
-			$scope.$digest();
 			addMarkers();
 		}
+		$scope.$digest();
 	};
 
 	var asyncDetailsReceiver = function () {
@@ -84,10 +82,11 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, $timeou
 			$scope.$digest();
 		} else {
 			$scope.placeDetails.loading = false;
+			console.log($scope.placeDetails.info);
 			$scope.$digest();
 		}
 	};
-
+	// end of not proud
 	var centerOnMap = function (id, toTop) {
 		if (typeof id === "number") {
 			if (id <= $scope.markers.length){
@@ -148,7 +147,7 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, $timeou
 				title: $scope.places[i].name
 			});
 			var markerClickEvent = google.maps.event.addListener(marker, 'click', function(id, index) {
-				return function() {$scope.showDetails(index, id);}
+				return function() {$scope.showDetails(index, id);$scope.$digest();}
 			}($scope.places[i].place_id, i+1));
 			$scope.markers.push(marker);
 			$scope.markersListeners.push(markerClickEvent);
@@ -220,6 +219,12 @@ app.factory('dragonHeart', function() {
 		var service = new google.maps.places.PlacesService(map);
 		service.getDetails({placeId : id}, function(results, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				if (results.photos) {
+					for (var i = 0; results.photos.length > i; i++) {
+						results.photos[i].photoSmall = results.photos[i].getUrl({'maxWidth': 100, 'maxHeight': 100});
+						results.photos[i].photoBig = results.photos[i].getUrl({'maxWidth': 600, 'maxHeight': 600});
+					}
+				}
 				placeDetail = results;
 			} else if (status == google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
 				placeDetail = {error : 'Nothing Found'};

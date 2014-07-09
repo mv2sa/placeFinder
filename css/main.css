@@ -134,7 +134,7 @@ body {
 
 main {
     width: 100%;
-    min-height: 5em;
+    min-height: 34em;
 }
 
 #maps {
@@ -149,19 +149,59 @@ main {
 #placeDetail,
 #searchConfig {
     width: 100%;
-    height: 22em;
     padding: 1em;
+    position: relative;
 }
 
-#placeDetail a,
-#searchConfig a {
+#placeDetail h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+}
+
+#placeDetail p {
+    margin: 0.3em 0;
+}
+
+#placeDetail .resultRatings p,
+#placeDetail .resultPrice p {
+    margin: 0;
+}
+
+#placeDetail .placeDetailsPictures {
+    text-align: center;
+    width: 96%;
+}
+
+#placeDetail .btn {
+    padding: 0.5em;
+    background-color: #c41e1e;
+    border-radius: 0.5em;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 0.5em;
+    display: inline-block;
+    font-size: 0.9em;
+}
+
+#placeDetail .placeDetailsPictures > a {
+    display: inline-block;
+    margin: 0 0.3em 0.6em;
+}
+
+#placeDetail .placeDetailsPictures > a:nth-child(1n+7) {
+    display: none;
+}
+
+#placeDetail .placeDetailsWeb,
+#searchConfig .placeDetailsWeb {
     color: #c41e1e;
     -o-text-overflow: ellipsis;
     -ms-text-overflow: ellipsis;
     -moz-text-overflow: ellipsis;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 19em;
+    max-width: 17em;
     overflow: hidden;
     display: inline-block;
     vertical-align: bottom;
@@ -414,6 +454,11 @@ main {
         float: right;
     }
 
+    #placeDetail .placeDetailsPictures {
+        position: absolute;
+        bottom: 1em;
+    }
+
     #placesContainer > .result {
         display: inline-block;
         width: 48%;
@@ -424,9 +469,14 @@ main {
 }
 
 @media only screen and (min-width: 1350px) {
-
     #placesContainer > .result {
         width: 31.33%;
+    }
+}
+
+@media only screen and (min-width: 1800px) {
+    main {
+        min-height: 54.4em;
     }
 }
 
