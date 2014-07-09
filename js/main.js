@@ -55,6 +55,21 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, $timeou
 			asyncDetailsReceiver();
 		}, 1000);
 	};
+
+	$scope.showImageOverlay = function (image) {
+		$scope.placeDetails.overlayImage = image;
+		if (window.innerWidth > 767) {
+			window.scrollTo(0, 42);
+		} else {
+			window.scrollTo(0, 394);
+		}
+		
+	};
+
+	$scope.hideImageOverlay = function () {
+		$scope.placeDetails.overlayImage = false;
+	};
+
 	// not proud
 	var asyncPlacesReceiver = function () {
 		$scope.places = dragonBreath.getPlaces();
@@ -225,6 +240,7 @@ app.factory('dragonHeart', function() {
 						results.photos[i].photoBig = results.photos[i].getUrl({'maxWidth': 600, 'maxHeight': 600});
 					}
 				}
+				results.overlayImage = false;
 				placeDetail = results;
 			} else if (status == google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
 				placeDetail = {error : 'Nothing Found'};

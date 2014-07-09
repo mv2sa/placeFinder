@@ -19,7 +19,7 @@
             <p ng-if="placeDetails.info.formatted_phone_number">Phone Number: <span> {{ placeDetails.info.formatted_phone_number }}</p>
             <p ng-if="placeDetails.info.website">Website: <a class="placeDetailsWeb" href="{{ placeDetails.info.website }}" target="_blank">{{ placeDetails.info.website }}</a></p>
             <div ng-if="placeDetails.info.photos" class="placeDetailsPictures">
-                <a href="#" ng-repeat="photo in placeDetails.info.photos">
+                <a href="" ng-repeat="photo in placeDetails.info.photos" ng-click="showImageOverlay(photo.photoBig);">
                     <img ng-src="{{ photo.photoSmall }}" />
                 </a>
             </div>
@@ -65,5 +65,18 @@
             </span>
         </p>
         <img src="img/powered-by-google-on-white.png" class="resultDisclaimer" alt="Powered by Google" />
+    </div>
+</div>
+<div class="overlay" ng-if="placeDetails.overlayImage">
+    <div class="overlayBackground">
+    </div>
+    <div class="overlayShell">
+        <a href="" class="overlayClose overlayCloseTop" ng-click="hideImageOverlay()">
+            Close
+        </a>
+        <img ng-src="{{ placeDetails.overlayImage }}" />
+        <a href="" class="overlayClose" ng-click="hideImageOverlay()">
+            Close
+        </a>
     </div>
 </div>
