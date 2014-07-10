@@ -84,6 +84,8 @@ GLOBAL STYLES
 
 body {
     margin: 0;
+    position: relative;
+    padding-bottom: 4.1em;
 }
 
 @font-face {
@@ -156,23 +158,31 @@ main {
 }
 
 .overlay .overlayShell {
-    max-width: 42em;
+    max-width: 35em;
     width: 90%;
     background-color: #fff;
     position: relative;
     margin: 0 auto;
-    margin-top: 26em;
+    margin-top: 13em;
     padding: 0.5em;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
 
-.overlay .overlayShell > img {
-    display: block;
-    width: 100%;
-    border: 1px dashed #c41e1e;
+.overlayImgContainer {
     min-height: 3em;
+    max-height: 34em;
+    width: 100%;
+    display: inline-block;
+    overflow: hidden;
+    border: 1px dashed #c41e1e;
+}
+
+.overlayImgContainer > img {
+    display: inline-block;
+    vertical-align: middle;
+    width: 100%;
 }
 
 .overlay .overlayShell .overlayClose {
@@ -188,6 +198,35 @@ main {
     border-radius: 5px;
     padding: 0.5em 0;
     text-align: center;
+}
+
+#reviewsContainer {
+    width: 90%;
+    margin: 0 auto;
+    max-height: 35em;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+#reviewsContainer > div {
+    background-color: #eee;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 0.5em 1em;
+    margin-bottom: 0.5em;
+}
+
+#reviewsContainer > div p {
+    margin: 0.5em 0;
+}
+
+#reviewsContainer > div .reviewAuthor {
+    font-weight: bold;
+}
+
+#reviewsContainer > div .reviewAspect {
+    text-transform: capitalize;
 }
 
 .overlay .overlayShell .overlayClose.overlayCloseTop {
@@ -352,6 +391,7 @@ main {
 #placesContainer {
     width: 90%;
     margin: 0 auto;
+    min-height: 6em;
 }
 
 .flexbox #placesContainer {
@@ -474,6 +514,9 @@ main {
 }
 
 #footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     background-color: #000;
     color: white;
     text-align: center;

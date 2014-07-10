@@ -1,82 +1,110 @@
-<div id="mapWrapper" ng-class="{doubleView: (placeDetails.display || searchConfig.display)}">
-    <div id="maps">
+<main id="mainWrapper" ng-style="">
+    <div id="mapWrapper" ng-class="{doubleView: (placeDetails.display || searchConfig.display)}">
+        <div id="maps">
+        </div>
+        <div id="placeDetail" ng-if="placeDetails.display">
+            <div id="placeDetailLoading" ng-if="placeDetails.loading">
+                <p class="loading"></p>
+            </div>
+            <div id="placeDetailContent" ng-if="!placeDetails.loading && !placeDetails.info.error">
+                <h3>{{ placeDetails.info.name }}</h3>
+                <div class="resultRatings" ng-if="placeDetails.info.rating">
+                    <p>
+                        <span ng-if="placeDetails.info.user_ratings_total">{{ placeDetails.info.user_ratings_total }} </span>Ratings: <span class="resultStars" ng-bind-html="placeDetails.info.rating | ratingToStar | toHTML"></span><span class="resultDollar" ng-if="placeDetails.info.price_level" ng-bind-html="placeDetails.info.price_level | priceRating | toHTML"></span>
+                    </p>
+                </div>
+                <a href="" ng-if="placeDetails.info.reviews && (placeDetails.info.rating || placeDetails.info.price_level)" class="btn" ng-click="showRatingOverlay();">
+                    See Ratings
+                </a>
+                <p ng-if="placeDetails.info.formatted_address">Address: <span> {{ placeDetails.info.formatted_address }}</span></p>
+                <p ng-if="placeDetails.info.formatted_phone_number">Phone Number: <span> {{ placeDetails.info.formatted_phone_number }}</p>
+                <p ng-if="placeDetails.info.website">Website: <a class="placeDetailsWeb" href="{{ placeDetails.info.website }}" target="_blank">{{ placeDetails.info.website }}</a></p>
+                <div ng-if="placeDetails.info.photos" class="placeDetailsPictures">
+                    <a href="" ng-repeat="photo in placeDetails.info.photos" ng-click="showImageOverlay(photo.photoBig);">
+                        <img ng-src="{{ photo.photoSmall }}" />
+                    </a>
+                </div>
+            </div>
+            <div id="placeDetailError" ng-if="placeDetails.info.error">
+                <p class="placesErrorDesc">{{ placeDetails.info.error }}</p>
+            </div>
+        </div>
+        <div id="searchConfig" ng-if="searchConfig.display">
+            <h3>Config Filters</h3>
+            <form>
+            </form>
+        </div>
     </div>
-    <div id="placeDetail" ng-if="placeDetails.display">
-        <div id="placeDetailLoading" ng-if="placeDetails.loading">
+    <div id="doubleButton" class="clearFloat">
+        <a href="" ng-click="showConfigs()" class="btn" id="configureBtn">Configure!</a> 
+        <a href="" ng-click="retrack()" class="btn" id="retrackBtn">Retrack!</a> 
+    </div>
+    <div id="placesContainer">
+        <div id="placesLoading" ng-if="places.loading">
             <p class="loading"></p>
         </div>
-        <div id="placeDetailContent" ng-if="!placeDetails.loading && !placeDetails.info.error">
-            <h3>{{ placeDetails.info.name }}</h3>
-            <div class="resultRatings" ng-if="placeDetails.info.rating">
-                <p>
-                    <span ng-if="placeDetails.info.user_ratings_total">{{ placeDetails.info.user_ratings_total }} </span>Ratings: <span class="resultStars" ng-bind-html="placeDetails.info.rating | ratingToStar | toHTML"></span><span class="resultDollar" ng-if="placeDetails.info.price_level" ng-bind-html="placeDetails.info.price_level | priceRating | toHTML"></span>
-                </p>
+        <div id="placesError" ng-if="places.error">
+            <p class="placesErrorDesc">{{places.error}}</p>
+        </div>
+        <div ng-if="!places.error && !places.loading" ng-repeat="place in places" class="result" ng-click="showDetails($index+1, place.place_id)">
+            <p class="resultIndex">{{ $index + 1 | toAZ }}</p>
+            <p class="resultName">{{ place.name }}</p>
+            <img class="resultIcon" ng-if="place.icon" ng-src="{{ place.icon }}" />
+            <p class="resultAddress" ng-if="place.vicinity">Address: {{ place.vicinity }}</p>
+            <div class="resultRatings" ng-if="place.rating">
+                <p>Ratings:</p>
+                <span class="resultStars" ng-bind-html="place.rating | ratingToStar | toHTML"></span>
             </div>
-            <a href="#" ng-if="placeDetails.info.reviews" class="btn">
-                See Ratings
+            <div class="resultPrice" ng-if="place.price_level">
+                <p>Price:</p>
+                <span class="resultDollar" ng-bind-html="place.price_level | priceRating | toHTML"></span>
+            </div>
+            <p class="resultCategories">
+                Tags: 
+                <span ng-repeat="locationType in place.types" class="resultCategory">
+                    {{ locationType | underscoreToSpace }}
+                </span>
+            </p>
+            <img src="img/powered-by-google-on-white.png" class="resultDisclaimer" alt="Powered by Google" />
+        </div>
+    </div>
+    <div class="overlay" ng-if="placeDetails.overlayImage">
+        <div class="overlayBackground">
+        </div>
+        <div class="overlayShell">
+            <a href="" class="overlayClose overlayCloseTop" ng-click="hideImageOverlay()">
+                Close
             </a>
-            <p ng-if="placeDetails.info.formatted_address">Address: <span> {{ placeDetails.info.formatted_address }}</span></p>
-            <p ng-if="placeDetails.info.formatted_phone_number">Phone Number: <span> {{ placeDetails.info.formatted_phone_number }}</p>
-            <p ng-if="placeDetails.info.website">Website: <a class="placeDetailsWeb" href="{{ placeDetails.info.website }}" target="_blank">{{ placeDetails.info.website }}</a></p>
-            <div ng-if="placeDetails.info.photos" class="placeDetailsPictures">
-                <a href="" ng-repeat="photo in placeDetails.info.photos" ng-click="showImageOverlay(photo.photoBig);">
-                    <img ng-src="{{ photo.photoSmall }}" />
-                </a>
+            <div class="overlayImgContainer">
+                <img ng-src="{{ placeDetails.overlayImage }}" />
             </div>
+            <a href="" class="overlayClose" ng-click="hideImageOverlay()">
+                Close
+            </a>
         </div>
-        <div id="placeDetailError" ng-if="placeDetails.info.error">
-            <p class="placesErrorDesc">{{ placeDetails.info.error }}</p>
+    </div>
+    <div class="overlay" ng-if="placeDetails.overlayRatings">
+        <div class="overlayBackground">
+        </div>
+        <div class="overlayShell">
+            <a href="" class="overlayClose overlayCloseTop" ng-click="hideRatingOverlay()">
+                Close
+            </a>
+            <div id="reviewsContainer">
+                <div ng-repeat="review in placeDetails.info.reviews">
+                    <p ng-if="review.author_name" class="reviewAuthor">{{ review.author_name }}</p>
+                    <p ng-if="review.rating">
+                        User Final Review: <span class="resultStars" ng-bind-html="review.rating | ratingToStar | toHTML"></span>
+                    </p>
+                    <p ng-repeat="aspect in review.aspects" class="reviewAspect" ng-if="aspect.rating > 0">
+                        {{ aspect.type }}: <span class="resultStars" ng-bind-html="aspect.rating | ratingToStar | toHTML"></span>
+                    </p>
+                    <p ng-if="review.text">{{ review.text }}</p>
+                </div>
+            </div>
+            <a href="" class="overlayClose" ng-click="hideRatingOverlay()">
+                Close
+            </a>
         </div>
     </div>
-    <div id="searchConfig" ng-if="searchConfig.display">
-        <h3>Config Filters</h3>
-        <form>
-        </form>
-    </div>
-</div>
-<div id="doubleButton" class="clearFloat">
-    <a href="" ng-click="showConfigs()" class="btn" id="configureBtn">Configure!</a> 
-    <a href="" ng-click="retrack()" class="btn" id="retrackBtn">Retrack!</a> 
-</div>
-<div id="placesContainer">
-    <div id="placesLoading" ng-if="places.loading">
-        <p class="loading"></p>
-    </div>
-    <div id="placesError" ng-if="places.error">
-        <p class="placesErrorDesc">{{places.error}}</p>
-    </div>
-    <div ng-if="!places.error && !places.loading" ng-repeat="place in places" class="result" ng-click="showDetails($index+1, place.place_id)">
-        <p class="resultIndex">{{ $index + 1 | toAZ }}</p>
-        <p class="resultName">{{ place.name }}</p>
-        <img class="resultIcon" ng-if="place.icon" ng-src="{{ place.icon }}" />
-        <p class="resultAddress" ng-if="place.vicinity">Address: {{ place.vicinity }}</p>
-        <div class="resultRatings" ng-if="place.rating">
-            <p>Ratings:</p>
-            <span class="resultStars" ng-bind-html="place.rating | ratingToStar | toHTML"></span>
-        </div>
-        <div class="resultPrice" ng-if="place.price_level">
-            <p>Price:</p>
-            <span class="resultDollar" ng-bind-html="place.price_level | priceRating | toHTML"></span>
-        </div>
-        <p class="resultCategories">
-            Tags: 
-            <span ng-repeat="locationType in place.types" class="resultCategory">
-                {{ locationType | underscoreToSpace }}
-            </span>
-        </p>
-        <img src="img/powered-by-google-on-white.png" class="resultDisclaimer" alt="Powered by Google" />
-    </div>
-</div>
-<div class="overlay" ng-if="placeDetails.overlayImage">
-    <div class="overlayBackground">
-    </div>
-    <div class="overlayShell">
-        <a href="" class="overlayClose overlayCloseTop" ng-click="hideImageOverlay()">
-            Close
-        </a>
-        <img ng-src="{{ placeDetails.overlayImage }}" />
-        <a href="" class="overlayClose" ng-click="hideImageOverlay()">
-            Close
-        </a>
-    </div>
-</div>
+</main>
