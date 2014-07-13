@@ -7,26 +7,35 @@ app.config(['$routeProvider', function($routeProvider) {
 	}).otherwise({redirectTo:'/'});
 }]);
 
-app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, $timeout) {
+app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, dragonBrain, $timeout) {
 	$scope.markersListeners = [];
 	$scope.places = [];
 	$scope.markers = [];
 	$scope.searchConfig = { display : false };
 	$scope.placeDetails = { display : false, loading : false };
 
-	$scope.retrack = function () {
+	$scope.retrack = function (normal) {
+		var randomLat, randomLon;
 		if (Modernizr.geolocation) {
 			navigator.geolocation.getCurrentPosition(function (position) {
 				if ($scope.placeDetails.display === true) {
 					$scope.placeDetails = { display : false, loading : false };
 				}
-				$scope.coords = new google.maps.LatLng(position.coords.latitude-(Math.floor(Math.random() * 7) + 1),position.coords.longitude-(Math.floor(Math.random() * 7) + 1));
+				$scope.searchConfig.display = false;
+				if (!normal) {
+					randomLat = Math.floor(Math.random() * 7) + 1;
+					randomLon = Math.floor(Math.random() * 7) + 1;
+				} else {
+					randomLat = 0;
+					randomLon = 0;
+				}
+				$scope.coords = new google.maps.LatLng(position.coords.latitude-randomLat,position.coords.longitude-randomLon);
 				$scope.maps.setCenter($scope.coords);
 				$scope.maps.setZoom(13);
 				removeAllMarkers();
 				addYouMarker();
 				showLoading();
-				dragonBreath.callMaps($scope.maps, $scope.coords, 2000, []);
+				dragonBreath.callMaps($scope.maps, $scope.coords, $scope.searchConfig.configuration.radius * 1609.34, $scope.searchConfig.configuration.currentSet);
 				$timeout(function(){
 					asyncPlacesReceiver();
 				}, 1000);
@@ -84,6 +93,17 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, $timeou
 		$scope.placeDetails.overlayRatings = false;
 	};
 
+	$scope.processConfigChange = function (index) {
+		$scope.searchConfig.configuration.currentSet = [];
+		for (var i = 0; i < $scope.searchConfig.configuration.places.length; i++) {
+			if($scope.searchConfig.configuration.places[i].active === true) {
+				for (var j = 0; j < $scope.searchConfig.configuration.places[i].list.length; j++) {
+					$scope.searchConfig.configuration.currentSet.push($scope.searchConfig.configuration.places[i].list[j]);
+				}
+			}
+		}
+	};
+
 	// not proud
 	var asyncPlacesReceiver = function () {
 		$scope.places = dragonBreath.getPlaces();
@@ -111,7 +131,6 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, $timeou
 			$scope.$digest();
 		} else {
 			$scope.placeDetails.loading = false;
-			console.log($scope.placeDetails.info);
 			$scope.$digest();
 		}
 	};
@@ -147,12 +166,20 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, $timeou
 				});
 				addYouMarker();
 				showLoading();
-				dragonBreath.callMaps($scope.maps, $scope.coords, 2000, []);
-				$timeout(function(){
-					asyncPlacesReceiver();
-				}, 1000);
+				dragonBrain.callConfigurations().then(function(d){
+					$scope.searchConfig.configuration = d;
+					$scope.processConfigChange();
+					initialPlacesLoad();
+				});
 			});
 		}	
+	};
+
+	var initialPlacesLoad = function () {
+		dragonBreath.callMaps($scope.maps, $scope.coords, $scope.searchConfig.configuration.radius * 1609.34, $scope.searchConfig.configuration.currentSet);
+		$timeout(function(){
+			asyncPlacesReceiver();
+		}, 1000);
 	};
 
 	var showLoading = function () {
@@ -272,6 +299,21 @@ app.factory('dragonHeart', function() {
 
 	return factory;
 
+});
+
+app.factory('dragonBrain', function($http) {
+
+	var factory = {};
+
+	factory.callConfigurations = function() {
+		var promise = $http.get('json/filters.json').then(function (results) {
+			console.log(results);
+			return results.data;
+		});
+		return promise;
+	};
+
+	return factory;
 });
 
 angular.module('filters', [])

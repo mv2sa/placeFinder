@@ -30,9 +30,21 @@
             </div>
         </div>
         <div id="searchConfig" ng-if="searchConfig.display">
-            <h3>Config Filters</h3>
+            <h3>Configuration</h3>
             <form>
+                <label for="radius">Radius (Miles):</label>
+                <input type="number" ng-model="searchConfig.configuration.radius" name="radius" />
+                <p>Filters:</p>
+                <div id="filtersWrapper">
+                    <div ng-repeat="check in searchConfig.configuration.places" class="checkBoxContainer">
+                        <input type="checkbox" ng-model="check.active" name="{{ check.name }}" ng-change="processConfigChange($index)" />
+                        <label for="{{ check.name }}" class="checkBoxLabel">{{ check.name }}</label>
+                    </div>
+                </div>
             </form>
+            <a href="" class="btn" ng-click="retrack(true)">
+                Done
+            </a>
         </div>
     </div>
     <div id="doubleButton" class="clearFloat">

@@ -268,7 +268,8 @@ main {
     width: 96%;
 }
 
-#placeDetail .btn {
+#placeDetail .btn,
+#searchConfig .btn {
     padding: 0.5em;
     background-color: #c41e1e;
     border-radius: 0.5em;
@@ -278,6 +279,14 @@ main {
     margin-top: 0.5em;
     display: inline-block;
     font-size: 0.9em;
+}
+
+#searchConfig .btn {
+    font-size: 1em;
+    width: 50%;
+    text-align: center;
+    margin: 3em auto 0;
+    display: block;
 }
 
 #placeDetail .placeDetailsPictures > a {
@@ -307,6 +316,35 @@ main {
     height: 100%;
     width: 100%;
     display: table;
+}
+
+#searchConfig .checkBoxLabel{
+    text-transform: capitalize;
+}
+
+#filtersWrapper {
+    width: 100%;
+    max-width: 23em;
+    margin: 0 auto;
+}
+
+#filtersWrapper:after,
+#filtersWrapper:before {
+    content: " ";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+#searchConfig .checkBoxContainer {
+    width: 50%;
+    float: left;
+}
+
+#searchSet p {
+    display: inline-block;
 }
 
 #placeDetailLoading .loading {
@@ -579,7 +617,7 @@ main {
 
 @media only screen and (min-width: 1800px) {
     main {
-        min-height: 54.4em;
+        min-height: 55.45em;
     }
 }
 

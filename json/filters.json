@@ -1,0 +1,80 @@
+{
+	"radius" : 2,
+	"coords" : {
+		"lat" : false,
+		"lon" : false
+	},
+	"currentSet" : [],
+	"places" : [
+		{
+			"name" : "transportation",
+			"active" : true,
+			"list" : ["airport", "taxi_stand", "train_station", "subway_station", "bus_station"]
+		},
+		{
+			"name" : "fun",
+			"active" : true,
+			"list" : ["amusement_park", "aquarium", "art_gallery", "bowling_alley", "zoo", "stadium", "campground", "museum", "park", "travel_agency", "movie_rental", "movie_theater"]
+		},
+		{
+			"name" : "night life",
+			"active" : true,
+			"list" : ["casino", "bar", "night_club"]
+		},
+		{
+			"name" : "food",
+			"active" : true,
+			"list" : ["bakery", "cafe", "food", "meal_delivery", "meal_takeaway", "restaurant"]
+		},
+		{
+			"name" : "religious",
+			"active" : true,
+			"list" : ["synagogue", "cemetery", "church", "hindu_temple", "mosque", "place_of_worship"]
+		},
+		{
+			"name" : "health",
+			"active" : true,
+			"list" : ["hospital", "health", "doctor", "dentist", "pharmacy", "physiotherapist", "veterinary_care"]
+		},
+		{
+			"name" : "beauty",
+			"active" : true,
+			"list" : ["beauty_salon", "gym", "hair_care", "spa"]
+		},
+		{
+			"name" : "stores",
+			"active" : true,
+			"list" : ["bicycle_store", "book_store", "car_dealer", "clothing_store", "convenience_store", "electronics_store", "jewelry_store", "hardware_store", "home_goods_store", "florist", "liquor_store", "pet_store", "department_store", "shoe_store", "shopping_mall", "furniture_store", "grocery_or_supermarket", "store"]
+		},
+		{
+			"name" : "education",
+			"active" : true,
+			"list" : ["school", "university", "library"]
+		},
+		{
+			"name" : "government",
+			"active" : true,
+			"list" : ["local_government_office", "embassy", "city_hall", "courthouse", "post_office"]
+		},
+		{
+			"name" : "business",
+			"active" : true,
+			"list" : ["general_contractor", "insurance_agency", "laundry", "lawyer", "locksmith", "real_estate_agency", "roofing_contractor", "storage", "accounting", "car_rental", "car_repair", "car_wash", "electrician", "funeral_home", "painter", "plumber", "finance", "moving_company", "bank"]
+		},
+		{
+			"name" : "Gas, ATM and parking",
+			"active" : true,
+			"list" : ["parking", "gas_station", "atm"]
+		},
+		{
+			"name" : "safety",
+			"active" : true,
+			"list" : ["fire_station", "police"]
+		},
+		{
+			"name" : "hotel",
+			"active" : true,
+			"list" : ["lodging"]
+		}
+	]
+}
