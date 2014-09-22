@@ -1,13 +1,13 @@
-var app = angular.module('dragon', ['ngRoute', 'filters']);
+var app = angular.module('placeFinder', ['ngRoute', 'filters']);
 
 app.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/', {
 		templateUrl: 'views/mapSearch.html', 
-    	controller: 'dragonRoar'
+    	controller: 'mapController'
 	}).otherwise({redirectTo:'/'});
 }]);
 
-app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, dragonBrain, $timeout) {
+app.controller('mapController', function($scope, mapPlaces, mapPlacesDetail, configurations, trackPosition, $timeout) {
 	$scope.markersListeners = [];
 	$scope.places = [];
 	$scope.markers = [];
@@ -15,32 +15,27 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, dragonB
 	$scope.placeDetails = { display : false, loading : false };
 
 	$scope.retrack = function (normal) {
-		var randomLat, randomLon;
-		if (Modernizr.geolocation) {
-			navigator.geolocation.getCurrentPosition(function (position) {
-				if ($scope.placeDetails.display === true) {
-					$scope.placeDetails = { display : false, loading : false };
-				}
-				$scope.searchConfig.display = false;
-				if (!normal) {
-					randomLat = Math.floor(Math.random() * 7) + 1;
-					randomLon = Math.floor(Math.random() * 7) + 1;
-				} else {
-					randomLat = 0;
-					randomLon = 0;
-				}
-				$scope.coords = new google.maps.LatLng(position.coords.latitude-randomLat,position.coords.longitude-randomLon);
-				$scope.maps.setCenter($scope.coords);
-				$scope.maps.setZoom(13);
-				removeAllMarkers();
-				addYouMarker();
-				showLoading();
-				dragonBreath.callMaps($scope.maps, $scope.coords, $scope.searchConfig.configuration.radius * 1609.34, $scope.searchConfig.configuration.currentSet);
-				$timeout(function(){
-					asyncPlacesReceiver();
-				}, 1000);
-			});
-		}	
+		trackPosition.getCoords().then(function(d) {
+			var randomLat, randomLon;
+			if ($scope.placeDetails.display === true) {
+				$scope.placeDetails = { display : false, loading : false };
+			}
+			$scope.searchConfig.display = false;
+			if (!normal) {
+				randomLat = Math.floor(Math.random() * 7) + 1;
+				randomLon = Math.floor(Math.random() * 7) + 1;
+			} else {
+				randomLat = 0;
+				randomLon = 0;
+			}
+			$scope.coords = new google.maps.LatLng(d[0]-randomLat,d[1]-randomLon);
+			$scope.maps.setCenter($scope.coords);
+			$scope.maps.setZoom(13);
+			removeAllMarkers();
+			addYouMarker();
+			showLoading();
+			getPlaces();
+		});
 	};
 
 	$scope.showConfigs = function () {
@@ -59,10 +54,14 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, dragonB
 			$scope.searchConfig.display = false;
 		}
 		centerOnMap(index);
-		dragonHeart.callToDetails($scope.maps, placeId);
-		$timeout(function(){
-			asyncDetailsReceiver();
-		}, 1000);
+		mapPlacesDetail.getPlaceDetail($scope.maps, placeId).then(function(d){
+			$scope.placeDetails.info = d;
+			if ($scope.placeDetails.info.error) {
+				$scope.placeDetails.loading = false;
+			} else {
+				$scope.placeDetails.loading = false;
+			}	
+		});
 	};
 
 	$scope.showImageOverlay = function (image) {
@@ -104,37 +103,6 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, dragonB
 		}
 	};
 
-	// not proud
-	var asyncPlacesReceiver = function () {
-		$scope.places = dragonBreath.getPlaces();
-		if ($scope.places.error) {
-			removeAllMarkers();
-			addYouMarker();
-		} else if ($scope.places.length === 0) {
-			$timeout(function(){
-				asyncPlacesReceiver();
-			}, 1000);
-		} else {
-			addMarkers();
-		}
-		$scope.$digest();
-	};
-
-	var asyncDetailsReceiver = function () {
-		$scope.placeDetails.info = dragonHeart.getPlaceDetail();
-		if ($scope.placeDetails.info === false) {
-			$timeout(function(){
-				asyncDetailsReceiver();
-			}, 1000);
-		} else if ($scope.placeDetails.info.error) {
-			$scope.placeDetails.loading = false;
-			$scope.$digest();
-		} else {
-			$scope.placeDetails.loading = false;
-			$scope.$digest();
-		}
-	};
-	// end of not proud
 	var centerOnMap = function (id, toTop) {
 		if (typeof id === "number") {
 			if (id <= $scope.markers.length){
@@ -148,43 +116,45 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, dragonB
 	};
 
 	var track = function () {
-		if (Modernizr.geolocation) {
-			navigator.geolocation.getCurrentPosition(function (position) {
-				$scope.coords = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-				$scope.maps = new google.maps.Map(document.getElementById('maps'), {
-			    	center: $scope.coords,
-			    	zoom: 13
-			    });
-			    $scope.$watch('searchConfig.display', function() {
-					resizeMap();
-				});
-			    $scope.$watch('placeDetails.display', function() {
-					resizeMap();
-				});
-			    google.maps.event.addDomListener(window, "resize", function() {
-					resizeMap();
-				});
-				addYouMarker();
-				showLoading();
-				dragonBrain.callConfigurations().then(function(d){
-					$scope.searchConfig.configuration = d;
-					$scope.processConfigChange();
-					initialPlacesLoad();
-				});
+		trackPosition.getCoords().then(function(d) {
+			$scope.coords = new google.maps.LatLng(d[0],d[1]);
+			$scope.maps = new google.maps.Map(document.getElementById('maps'), {
+		    	center: $scope.coords,
+		    	zoom: 13
+		    });
+		    $scope.$watch('searchConfig.display', function() {
+				resizeMap();
 			});
-		}	
+		    $scope.$watch('placeDetails.display', function() {
+				resizeMap();
+			});
+		    google.maps.event.addDomListener(window, "resize", function() {
+				resizeMap();
+			});
+			addYouMarker();
+			showLoading();
+			configurations.callConfigurations().then(function(d){
+				$scope.searchConfig.configuration = d;
+				$scope.processConfigChange();
+				getPlaces();
+			});
+		});
 	};
 
-	var initialPlacesLoad = function () {
-		dragonBreath.callMaps($scope.maps, $scope.coords, $scope.searchConfig.configuration.radius * 1609.34, $scope.searchConfig.configuration.currentSet);
-		$timeout(function(){
-			asyncPlacesReceiver();
-		}, 1000);
+	var getPlaces = function () {
+		mapPlaces.getPlaces($scope.maps, $scope.coords, $scope.searchConfig.configuration.radius * 1609.34, $scope.searchConfig.configuration.currentSet).then(function(d){
+			$scope.places = d;
+			if ($scope.places.error) {
+				removeAllMarkers();
+				addYouMarker();
+			} else {
+				addMarkers();
+			}
+		});
 	};
 
 	var showLoading = function () {
 		$scope.places = { loading : true };
-		$scope.$digest();
 	};
 
 	var addMarkers = function () {
@@ -240,38 +210,36 @@ app.controller('dragonRoar', function($scope, dragonBreath, dragonHeart, dragonB
 
 });
 
-app.factory('dragonBreath', function() {
+app.factory('mapPlaces', ['$q', '$rootScope', function ($q, $rootScope) {
 
 	var factory = {};
-	var places = [];
 
-	factory.callMaps = function (map, coords, area, interests) {
+	factory.getPlaces = function(map, coords, area, interests) {
+		var deferred = $q.defer();
 		var service = new google.maps.places.PlacesService(map);
 		service.nearbySearch({location : coords, radius : area, types : interests}, function(results, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
-				places = results;
+                $rootScope.$apply(function() {
+                    deferred.resolve(results);
+                });
 			} else if (status == google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
-				places = {error : 'Nothing Found'};
+				deferred.reject('Nothing Found');
 			} else {
-				places = {error : 'Service Unavailable'};
-			}
-			return places;			
+				deferred.reject('Service Unavailable');
+			}	
 		});
-	};
-
-	factory.getPlaces = function () {
-		return places;
+		return deferred.promise;
 	};
 
 	return factory;
-});
+}]);
 
-app.factory('dragonHeart', function() {
+app.factory('mapPlacesDetail', ['$q', '$rootScope', function ($q, $rootScope) {
 
 	var factory = {};
-	var placeDetail = false;
 
-	factory.callToDetails = function (map, id) {
+	factory.getPlaceDetail = function(map, id) {
+		var deferred = $q.defer();
 		var service = new google.maps.places.PlacesService(map);
 		service.getDetails({placeId : id}, function(results, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -283,31 +251,28 @@ app.factory('dragonHeart', function() {
 				}
 				results.overlayImage = false;
 				results.overlayRatings = false;
-				placeDetail = results;
+                $rootScope.$apply(function() {
+                    deferred.resolve(results);
+                });
 			} else if (status == google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
-				placeDetail = {error : 'Nothing Found'};
+				deferred.reject({error : 'Nothing Found'});
 			} else {
-				placeDetail = {error : 'Service Unavailable'};
+				deferred.reject({error : 'Service Unavailable'});
 			}
-			return placeDetail;			
 		});
-	};
-
-	factory.getPlaceDetail = function () {
-		return placeDetail;
+		return deferred.promise;
 	};
 
 	return factory;
 
-});
+}]);
 
-app.factory('dragonBrain', function($http) {
+app.factory('configurations', function($http) {
 
 	var factory = {};
 
 	factory.callConfigurations = function() {
 		var promise = $http.get('json/filters.json').then(function (results) {
-			console.log(results);
 			return results.data;
 		});
 		return promise;
@@ -315,6 +280,34 @@ app.factory('dragonBrain', function($http) {
 
 	return factory;
 });
+
+app.factory('trackPosition', ['$q', '$window', '$rootScope', function ($q, $window, $rootScope) {
+
+	var factory = {};
+
+	factory.getCoords = function() {
+		var deferred = $q.defer();
+		if (Modernizr.geolocation) {
+            $window.navigator.geolocation.getCurrentPosition(function (position) {
+                $rootScope.$apply(function() {
+                    deferred.resolve([position.coords.latitude, position.coords.longitude]);
+                });
+            }, function (error) {
+                $rootScope.$apply(function() {
+                    deferred.reject(error);
+                });
+            });
+		} else {
+            $rootScope.$apply(function() {
+                deferred.reject(new Error("Geolocation is not supported"));
+            });
+		}
+		return deferred.promise;
+	};
+
+	return factory;
+
+}]);
 
 angular.module('filters', [])
 	.filter('underscoreToSpace', function () {
