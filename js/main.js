@@ -7,7 +7,7 @@ app.config(['$routeProvider', function($routeProvider) {
 	}).otherwise({redirectTo:'/'});
 }]);
 
-app.controller('mapController', function($scope, mapPlaces, mapPlacesDetail, configurations, trackPosition, $timeout) {
+app.controller('mapController', function($scope, googleMaps, configurations, trackPosition, $timeout) {
 	$scope.markersListeners = [];
 	$scope.places = [];
 	$scope.markers = [];
@@ -54,7 +54,7 @@ app.controller('mapController', function($scope, mapPlaces, mapPlacesDetail, con
 			$scope.searchConfig.display = false;
 		}
 		centerOnMap(index);
-		mapPlacesDetail.getPlaceDetail($scope.maps, placeId).then(function(d){
+		googleMaps.getPlaceDetail($scope.maps, placeId).then(function(d){
 			$scope.placeDetails.info = d;
 			if ($scope.placeDetails.info.error) {
 				$scope.placeDetails.loading = false;
@@ -142,7 +142,7 @@ app.controller('mapController', function($scope, mapPlaces, mapPlacesDetail, con
 	};
 
 	var getPlaces = function () {
-		mapPlaces.getPlaces($scope.maps, $scope.coords, $scope.searchConfig.configuration.radius * 1609.34, $scope.searchConfig.configuration.currentSet).then(function(d){
+		googleMaps.getPlaces($scope.maps, $scope.coords, $scope.searchConfig.configuration.radius * 1609.34, $scope.searchConfig.configuration.currentSet).then(function(d){
 			$scope.places = d;
 			if ($scope.places.error) {
 				removeAllMarkers();
@@ -210,7 +210,7 @@ app.controller('mapController', function($scope, mapPlaces, mapPlacesDetail, con
 
 });
 
-app.factory('mapPlaces', ['$q', '$rootScope', function ($q, $rootScope) {
+app.factory('googleMaps', ['$q', '$rootScope', function ($q, $rootScope) {
 
 	var factory = {};
 
@@ -230,13 +230,6 @@ app.factory('mapPlaces', ['$q', '$rootScope', function ($q, $rootScope) {
 		});
 		return deferred.promise;
 	};
-
-	return factory;
-}]);
-
-app.factory('mapPlacesDetail', ['$q', '$rootScope', function ($q, $rootScope) {
-
-	var factory = {};
 
 	factory.getPlaceDetail = function(map, id) {
 		var deferred = $q.defer();
@@ -262,6 +255,15 @@ app.factory('mapPlacesDetail', ['$q', '$rootScope', function ($q, $rootScope) {
 		});
 		return deferred.promise;
 	};
+
+	return factory;
+}]);
+
+app.factory('mapPlacesDetail', ['$q', '$rootScope', function ($q, $rootScope) {
+
+	var factory = {};
+
+
 
 	return factory;
 
